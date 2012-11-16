@@ -197,12 +197,9 @@ EOF
 	chmod 644 "$TMP/gpg/pubring.gpg"
 	mv "$TMP/gpg/pubring.gpg" "$VARCACHE/keyring.gpg"
 
-	# Move the symbolic link for this distro to this build.
-	ln -s "$DIST-$DATE" "$DISTCACHE-"
-	OLD="$(readlink "$VARCACHE/dists/$DIST" || true)"
-	mv -T "$DISTCACHE-" "$VARCACHE/dists/$DIST"
-	[ -z "$OLD" ] || rm -rf "$VARCACHE/dists/$OLD"
-
+        [ -e "$VARCACHE/dists/$DIST-previous" ] && rm -rf "$VARCACHE/dists/$DIST-previous"
+        [ -e "$VARCACHE/dists/$DIST" ] && mv "$VARCACHE/dists/$DIST" "$VARCACHE/dists/$DIST-previous"
+        mv "$DISTCACHE" "$VARCACHE/dists/$DIST"
 }
 
 # Add a binary package to the given dist and to the pool.
